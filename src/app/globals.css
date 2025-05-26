@@ -10,16 +10,18 @@
 
 :root {
   --background: #f8fafc;
-  --foreground: #22223b;
-  --primary-color: #06beb6;
-  --secondary-color: #48b1f3;
-  --accent-color: #22223b;
+  --foreground: #1a1a2e;
+  --primary-color: #6366f1;
+  --secondary-color: #818cf8;
+  --accent-color: #4f46e5;
   --background-color: #f8fafc;
-  --gradient: linear-gradient(135deg, #06beb6 0%, #48b1f3 100%);
-  --text-primary: #1a1a2e;
-  --text-secondary: #2d3436;
-  --text-light: #636e72;
+  --gradient: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
+  --text-primary: #1e293b;
+  --text-secondary: #334155;
+  --text-light: #64748b;
   --text-white: #ffffff;
+  --surface-color: rgba(255, 255, 255, 0.95);
+  --border-color: rgba(99, 102, 241, 0.1);
 }
 
 @theme inline {
@@ -47,78 +49,79 @@ body {
 }
 
 .venue-card {
-  @apply bg-white/90 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300 border border-[#e0f7fa];
-  backdrop-filter: blur(2px);
+  @apply bg-white/95 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 border border-[#e0e7ff];
+  backdrop-filter: blur(8px);
 }
 
 .venue-card h3 {
-  @apply text-[#1a1a2e] font-bold;
+  @apply text-[#1e293b] font-bold;
 }
 
 .venue-card p {
-  @apply text-[#2d3436];
+  @apply text-[#334155];
 }
 
 .time-slot {
-  @apply bg-white/90 border-2 border-[#06beb6] rounded-xl px-5 py-2 m-1 cursor-pointer hover:bg-[#06beb6] hover:text-white transition-colors duration-300 font-bold shadow text-[#1a1a2e];
+  @apply bg-white/95 border-2 border-[#6366f1] rounded-xl px-5 py-2 m-1 cursor-pointer hover:bg-[#6366f1] hover:text-white transition-all duration-300 font-bold shadow text-[#1e293b];
 }
 
 .time-slot.selected {
-  @apply bg-[#06beb6] text-white;
+  @apply bg-[#6366f1] text-white;
 }
 
 .btn-primary {
-  @apply bg-gradient-to-l from-[#06beb6] to-[#48b1f3] text-white px-8 py-3 rounded-xl shadow-lg hover:from-[#48b1f3] hover:to-[#06beb6] transition-all duration-300 font-bold text-lg;
+  @apply bg-gradient-to-l from-[#6366f1] to-[#818cf8] text-white px-8 py-3 rounded-xl shadow-lg hover:from-[#818cf8] hover:to-[#6366f1] transition-all duration-300 font-bold text-lg;
 }
 
 .nav-link {
-  @apply text-[#1a1a2e] hover:text-[#06beb6] transition-colors duration-300 font-bold text-lg px-3;
+  @apply text-[#1e293b] hover:text-[#6366f1] transition-all duration-300 font-bold text-lg px-3 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-[#6366f1] after:bottom-0 after:left-0 after:transition-all after:duration-300 hover:after:w-full;
 }
 
 input, textarea {
   font-family: 'Vazir', Arial, Helvetica, sans-serif;
-  @apply text-[#1a1a2e] bg-white/90;
+  @apply text-[#1e293b] bg-white/95 rounded-xl border border-[#e0e7ff] focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition-all duration-300;
 }
 
 input::placeholder, textarea::placeholder {
-  @apply text-[#636e72];
+  @apply text-[#64748b];
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Vazir', Arial, Helvetica, sans-serif;
-  @apply text-[#1a1a2e];
+  @apply text-[#1e293b];
 }
 
 label {
-  @apply text-[#2d3436] font-bold;
+  @apply text-[#334155] font-bold;
 }
 
 /* استایل‌های مخصوص صفحه رزرو */
 .venue-detail h2 {
-  @apply text-[#1a1a2e] font-bold;
+  @apply text-[#1e293b] font-bold;
 }
 
 .venue-detail p {
-  @apply text-[#2d3436];
+  @apply text-[#334155];
 }
 
 .time-slots-container h3 {
-  @apply text-[#1a1a2e] font-bold;
+  @apply text-[#1e293b] font-bold;
 }
 
 /* استایل‌های مخصوص صفحه رزرو شده ها */
 .reservation-card {
-  @apply bg-white/90 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300 border border-[#e0f7fa];
+  @apply bg-white/95 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 border border-[#e0e7ff];
+  backdrop-filter: blur(8px);
 }
 
 .reservation-card h3 {
-  @apply text-[#1a1a2e] font-bold;
+  @apply text-[#1e293b] font-bold;
 }
 
 .reservation-card p {
-  @apply text-[#2d3436];
+  @apply text-[#334155];
 }
 
 .reservation-date {
-  @apply text-[#636e72];
+  @apply text-[#64748b];
 }
