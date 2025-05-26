@@ -208,6 +208,17 @@ export default function AdminDashboard() {
     return new Date(dateString).toLocaleDateString('fa-IR', options);
   };
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewVenue({ ...newVenue, image: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="min-h-screen p-8">
       <div className="max-w-6xl mx-auto">
@@ -228,7 +239,7 @@ export default function AdminDashboard() {
         {/* فرم افزودن سالن جدید */}
         <div className="venue-card mb-8 bg-white/80 backdrop-blur-sm">
           <h3 className="text-xl font-bold mb-4">افزودن سالن جدید</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-4">
             <div>
               <label className="block text-[#2d3436] font-bold mb-2">نام سالن:</label>
               <input
@@ -248,6 +259,31 @@ export default function AdminDashboard() {
                 className="w-full p-3 rounded-xl border-2 border-[#06beb6] focus:outline-none focus:border-[#48b1f3] bg-white"
                 placeholder="توضیحات سالن را وارد کنید"
               />
+            </div>
+            <div>
+              <label className="block text-[#2d3436] font-bold mb-2">تصویر سالن:</label>
+              <div className="flex items-center gap-4">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                  id="venue-image"
+                />
+                <label
+                  htmlFor="venue-image"
+                  className="cursor-pointer bg-[#06beb6] text-white px-4 py-2 rounded-xl hover:bg-[#48b1f3] transition-colors duration-300"
+                >
+                  انتخاب تصویر
+                </label>
+                {newVenue.image && (
+                  <img
+                    src={newVenue.image}
+                    alt="Preview"
+                    className="w-24 h-24 object-cover rounded-xl"
+                  />
+                )}
+              </div>
             </div>
           </div>
           <button
