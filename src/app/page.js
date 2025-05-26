@@ -29,7 +29,7 @@ export default function Home() {
   return (
     <main className="min-h-screen p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-12 text-[#1a1a2e]">سالن‌های ورزشی</h1>
+  
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {venues.map((venue) => (
             <div key={venue.id} className="venue-card">
