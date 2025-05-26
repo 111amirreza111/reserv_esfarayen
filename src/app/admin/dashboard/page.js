@@ -18,6 +18,7 @@ export default function AdminDashboard() {
     timeSlots: []
   });
   const [reservations, setReservations] = useState([]);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
 
   useEffect(() => {
     // بررسی نقش کاربر
@@ -148,6 +149,23 @@ export default function AdminDashboard() {
     );
   };
 
+  const getReservationDetails = (venueId, timeSlot) => {
+    return reservations.find(
+      r => r.venueId === venueId && r.timeSlot === timeSlot
+    );
+  };
+
+  const formatDate = (dateString) => {
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    };
+    return new Date(dateString).toLocaleDateString('fa-IR', options);
+  };
+
   return (
     <div className="min-h-screen p-8">
       <div className="max-w-6xl mx-auto">
@@ -207,22 +225,40 @@ export default function AdminDashboard() {
               <div className="mb-4">
                 <h4 className="font-bold mb-2">ساعت‌های رزرو:</h4>
                 <div className="flex flex-wrap gap-2">
-                  {venue.timeSlots.map((timeSlot) => (
-                    <div key={timeSlot} className="flex items-center gap-2">
-                      <span className={`time-slot ${isTimeSlotReserved(venue.id, timeSlot) ? 'bg-red-500 text-white' : ''}`}>
-                        {timeSlot}
-                        {isTimeSlotReserved(venue.id, timeSlot) && ' (رزرو شده)'}
-                      </span>
-                      {!isTimeSlotReserved(venue.id, timeSlot) && (
-                        <button
-                          onClick={() => handleRemoveTimeSlot(venue.id, timeSlot)}
-                          className="text-red-500 hover:text-red-700"
-                        >
-                          ×
-                        </button>
-                      )}
-                    </div>
-                  ))}
+                  {venue.timeSlots.map((timeSlot) => {
+                    const isReserved = isTimeSlotReserved(venue.id, timeSlot);
+                    const reservation = isReserved ? getReservationDetails(venue.id, timeSlot) : null;
+                    
+                    return (
+                      <div key={timeSlot} className="flex flex-col gap-2 w-full">
+                        <div className="flex items-center gap-2">
+                          <span 
+                            className={`time-slot flex-1 ${isReserved ? 'bg-red-500 text-white' : ''}`}
+                            onClick={() => setSelectedTimeSlot(isReserved ? reservation : null)}
+                          >
+                            {timeSlot}
+                            {isReserved && ' (رزرو شده)'}
+                          </span>
+                          {!isReserved && (
+                            <button
+                              onClick={() => handleRemoveTimeSlot(venue.id, timeSlot)}
+                              className="text-red-500 hover:text-red-700"
+                            >
+                              ×
+                            </button>
+                          )}
+                        </div>
+                        {isReserved && selectedTimeSlot?.id === reservation?.id && (
+                          <div className="bg-white/80 rounded-xl p-3 text-sm">
+                            <p className="font-bold mb-1">جزئیات رزرو:</p>
+                            <p>نام: {reservation.name}</p>
+                            <p>شماره دانشجویی: {reservation.phoneNumber}</p>
+                            <p>تاریخ رزرو: {formatDate(reservation.date)}</p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
