@@ -1,8 +1,21 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Vazir';
+  src: url('/fonts/Vazir-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc;
+  --foreground: #22223b;
+  --primary-color: #06beb6;
+  --secondary-color: #48b1f3;
+  --accent-color: #22223b;
+  --background-color: #f8fafc;
+  --gradient: linear-gradient(135deg, #06beb6 0%, #48b1f3 100%);
 }
 
 @theme inline {
@@ -20,7 +33,40 @@
 }
 
 body {
-  background: var(--background);
+  background: var(--background-color);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Vazir', Arial, Helvetica, sans-serif;
+  direction: rtl;
+  min-height: 100vh;
+  background-image: var(--gradient);
+  background-attachment: fixed;
+}
+
+.venue-card {
+  @apply bg-white/80 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300 border border-[#e0f7fa];
+  backdrop-filter: blur(2px);
+}
+
+.time-slot {
+  @apply bg-white/70 border-2 border-[#06beb6] rounded-xl px-5 py-2 m-1 cursor-pointer hover:bg-[#06beb6] hover:text-white transition-colors duration-300 font-bold shadow;
+}
+
+.time-slot.selected {
+  @apply bg-[#06beb6] text-white;
+}
+
+.btn-primary {
+  @apply bg-gradient-to-l from-[#06beb6] to-[#48b1f3] text-white px-8 py-3 rounded-xl shadow-lg hover:from-[#48b1f3] hover:to-[#06beb6] transition-all duration-300 font-bold text-lg;
+}
+
+.nav-link {
+  @apply text-[#22223b] hover:text-[#06beb6] transition-colors duration-300 font-bold text-lg px-3;
+}
+
+input, textarea {
+  font-family: 'Vazir', Arial, Helvetica, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Vazir', Arial, Helvetica, sans-serif;
 }
