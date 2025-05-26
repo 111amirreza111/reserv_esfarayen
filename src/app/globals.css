@@ -16,6 +16,10 @@
   --accent-color: #22223b;
   --background-color: #f8fafc;
   --gradient: linear-gradient(135deg, #06beb6 0%, #48b1f3 100%);
+  --text-primary: #1a1a2e;
+  --text-secondary: #2d3436;
+  --text-light: #636e72;
+  --text-white: #ffffff;
 }
 
 @theme inline {
@@ -34,7 +38,7 @@
 
 body {
   background: var(--background-color);
-  color: var(--foreground);
+  color: var(--text-primary);
   font-family: 'Vazir', Arial, Helvetica, sans-serif;
   direction: rtl;
   min-height: 100vh;
@@ -43,12 +47,20 @@ body {
 }
 
 .venue-card {
-  @apply bg-white/80 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300 border border-[#e0f7fa];
+  @apply bg-white/90 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300 border border-[#e0f7fa];
   backdrop-filter: blur(2px);
 }
 
+.venue-card h3 {
+  @apply text-[#1a1a2e] font-bold;
+}
+
+.venue-card p {
+  @apply text-[#2d3436];
+}
+
 .time-slot {
-  @apply bg-white/70 border-2 border-[#06beb6] rounded-xl px-5 py-2 m-1 cursor-pointer hover:bg-[#06beb6] hover:text-white transition-colors duration-300 font-bold shadow;
+  @apply bg-white/90 border-2 border-[#06beb6] rounded-xl px-5 py-2 m-1 cursor-pointer hover:bg-[#06beb6] hover:text-white transition-colors duration-300 font-bold shadow text-[#1a1a2e];
 }
 
 .time-slot.selected {
@@ -60,13 +72,53 @@ body {
 }
 
 .nav-link {
-  @apply text-[#22223b] hover:text-[#06beb6] transition-colors duration-300 font-bold text-lg px-3;
+  @apply text-[#1a1a2e] hover:text-[#06beb6] transition-colors duration-300 font-bold text-lg px-3;
 }
 
 input, textarea {
   font-family: 'Vazir', Arial, Helvetica, sans-serif;
+  @apply text-[#1a1a2e] bg-white/90;
+}
+
+input::placeholder, textarea::placeholder {
+  @apply text-[#636e72];
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Vazir', Arial, Helvetica, sans-serif;
+  @apply text-[#1a1a2e];
+}
+
+label {
+  @apply text-[#2d3436] font-bold;
+}
+
+/* استایل‌های مخصوص صفحه رزرو */
+.venue-detail h2 {
+  @apply text-[#1a1a2e] font-bold;
+}
+
+.venue-detail p {
+  @apply text-[#2d3436];
+}
+
+.time-slots-container h3 {
+  @apply text-[#1a1a2e] font-bold;
+}
+
+/* استایل‌های مخصوص صفحه رزروهای من */
+.reservation-card {
+  @apply bg-white/90 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300 border border-[#e0f7fa];
+}
+
+.reservation-card h3 {
+  @apply text-[#1a1a2e] font-bold;
+}
+
+.reservation-card p {
+  @apply text-[#2d3436];
+}
+
+.reservation-date {
+  @apply text-[#636e72];
 }
