@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
           <div className="container mx-auto px-4">
             <div className="flex justify-between items-center h-16">
               <h1 className="text-2xl font-bold bg-gradient-to-l from-[#6366f1] to-[#818cf8] bg-clip-text text-transparent">
-                رزرو سالن
+                سامانه رزرو دانشگاه
               </h1>
               <div className="flex items-center space-x-6 space-x-reverse">
                 <Link href="/" className="nav-link">رزرو</Link>
