@@ -11,6 +11,7 @@ export default function VenuePage({ params }) {
   const [name, setName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [error, setError] = useState('')
+  const [reservations, setReservations] = useState([])
 
   useEffect(() => {
     // بررسی وضعیت لاگین
@@ -35,11 +36,27 @@ export default function VenuePage({ params }) {
     } else {
       router.push('/')
     }
+
+    // بارگذاری رزروها
+    const savedReservations = JSON.parse(localStorage.getItem('reservations') || '[]')
+    setReservations(savedReservations)
   }, [params.id, router])
+
+  const isTimeSlotReserved = (timeSlot) => {
+    return reservations.some(
+      r => r.venueId === venue.id && r.timeSlot === timeSlot
+    )
+  }
 
   const handleReservation = () => {
     if (!selectedTimeSlot || !name || !phoneNumber) {
       setError('لطفا تمام فیلدها را پر کنید')
+      return
+    }
+
+    // بررسی رزرو نبودن ساعت
+    if (isTimeSlotReserved(selectedTimeSlot)) {
+      setError('این ساعت قبلاً رزرو شده است')
       return
     }
 
@@ -72,6 +89,9 @@ export default function VenuePage({ params }) {
     )
   }
 
+  // فیلتر کردن ساعت‌های رزرو شده
+  const availableTimeSlots = venue.timeSlots.filter(timeSlot => !isTimeSlotReserved(timeSlot))
+
   return (
     <div className="min-h-screen p-8">
       <div className="max-w-4xl mx-auto">
@@ -81,17 +101,21 @@ export default function VenuePage({ params }) {
 
           <div className="mb-8">
             <h3 className="text-xl font-bold mb-4 text-[#1a1a2e]">انتخاب ساعت رزرو:</h3>
-            <div className="flex flex-wrap gap-4">
-              {venue.timeSlots.map((timeSlot) => (
-                <button
-                  key={timeSlot}
-                  onClick={() => setSelectedTimeSlot(timeSlot)}
-                  className={`time-slot ${selectedTimeSlot === timeSlot ? 'selected' : ''}`}
-                >
-                  {timeSlot}
-                </button>
-              ))}
-            </div>
+            {availableTimeSlots.length === 0 ? (
+              <p className="text-red-500">هیچ ساعت خالی برای رزرو وجود ندارد</p>
+            ) : (
+              <div className="flex flex-wrap gap-4">
+                {availableTimeSlots.map((timeSlot) => (
+                  <button
+                    key={timeSlot}
+                    onClick={() => setSelectedTimeSlot(timeSlot)}
+                    className={`time-slot ${selectedTimeSlot === timeSlot ? 'selected' : ''}`}
+                  >
+                    {timeSlot}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="space-y-4">
@@ -122,6 +146,7 @@ export default function VenuePage({ params }) {
           <button
             onClick={handleReservation}
             className="btn-primary w-full mt-8"
+            disabled={availableTimeSlots.length === 0}
           >
             ثبت رزرو
           </button>

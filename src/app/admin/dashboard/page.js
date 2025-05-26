@@ -8,7 +8,7 @@ export default function AdminDashboard() {
   const router = useRouter();
   const [venues, setVenues] = useState([]);
   const [selectedVenue, setSelectedVenue] = useState(null);
-  const [newTimeSlot, setNewTimeSlot] = useState('');
+  const [timeSlotInputs, setTimeSlotInputs] = useState({});
   const [error, setError] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [newVenue, setNewVenue] = useState({
@@ -17,6 +17,7 @@ export default function AdminDashboard() {
     image: '/images/default-venue.jpg',
     timeSlots: []
   });
+  const [reservations, setReservations] = useState([]);
 
   useEffect(() => {
     // بررسی نقش کاربر
@@ -33,11 +34,32 @@ export default function AdminDashboard() {
     } else {
       setVenues(venueData.venues);
     }
+
+    // بارگذاری رزروها
+    const savedReservations = JSON.parse(localStorage.getItem('reservations') || '[]');
+    setReservations(savedReservations);
   }, [router]);
 
   const handleAddTimeSlot = (venueId) => {
+    const newTimeSlot = timeSlotInputs[venueId];
     if (!newTimeSlot) {
       setError('لطفا ساعت را وارد کنید');
+      return;
+    }
+
+    // بررسی تکراری نبودن ساعت
+    const venue = venues.find(v => v.id === venueId);
+    if (venue.timeSlots.includes(newTimeSlot)) {
+      setError('این ساعت قبلاً اضافه شده است');
+      return;
+    }
+
+    // بررسی رزرو نبودن ساعت
+    const isReserved = reservations.some(
+      r => r.venueId === venueId && r.timeSlot === newTimeSlot
+    );
+    if (isReserved) {
+      setError('این ساعت قبلاً رزرو شده است');
       return;
     }
 
@@ -52,12 +74,21 @@ export default function AdminDashboard() {
     });
 
     setVenues(updatedVenues);
-    setNewTimeSlot('');
+    setTimeSlotInputs({ ...timeSlotInputs, [venueId]: '' });
     setError('');
     setIsEditing(true);
   };
 
   const handleRemoveTimeSlot = (venueId, timeSlot) => {
+    // بررسی رزرو نبودن ساعت
+    const isReserved = reservations.some(
+      r => r.venueId === venueId && r.timeSlot === timeSlot
+    );
+    if (isReserved) {
+      setError('این ساعت رزرو شده است و قابل حذف نیست');
+      return;
+    }
+
     const updatedVenues = venues.map(venue => {
       if (venue.id === venueId) {
         return {
@@ -109,6 +140,12 @@ export default function AdminDashboard() {
       localStorage.removeItem('userRole');
       router.push('/login');
     }
+  };
+
+  const isTimeSlotReserved = (venueId, timeSlot) => {
+    return reservations.some(
+      r => r.venueId === venueId && r.timeSlot === timeSlot
+    );
   };
 
   return (
@@ -172,13 +209,18 @@ export default function AdminDashboard() {
                 <div className="flex flex-wrap gap-2">
                   {venue.timeSlots.map((timeSlot) => (
                     <div key={timeSlot} className="flex items-center gap-2">
-                      <span className="time-slot">{timeSlot}</span>
-                      <button
-                        onClick={() => handleRemoveTimeSlot(venue.id, timeSlot)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        ×
-                      </button>
+                      <span className={`time-slot ${isTimeSlotReserved(venue.id, timeSlot) ? 'bg-red-500 text-white' : ''}`}>
+                        {timeSlot}
+                        {isTimeSlotReserved(venue.id, timeSlot) && ' (رزرو شده)'}
+                      </span>
+                      {!isTimeSlotReserved(venue.id, timeSlot) && (
+                        <button
+                          onClick={() => handleRemoveTimeSlot(venue.id, timeSlot)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          ×
+                        </button>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -187,8 +229,8 @@ export default function AdminDashboard() {
               <div className="flex flex-col sm:flex-row gap-2">
                 <input
                   type="text"
-                  value={newTimeSlot}
-                  onChange={(e) => setNewTimeSlot(e.target.value)}
+                  value={timeSlotInputs[venue.id] || ''}
+                  onChange={(e) => setTimeSlotInputs({ ...timeSlotInputs, [venue.id]: e.target.value })}
                   placeholder="ساعت جدید (مثال: 08:00-10:00)"
                   className="w-full p-3 rounded-xl border-2 border-[#06beb6] focus:outline-none focus:border-[#48b1f3]"
                 />
