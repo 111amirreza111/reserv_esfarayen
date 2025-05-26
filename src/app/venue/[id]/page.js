@@ -130,13 +130,13 @@ export default function VenuePage({ params }) {
               />
             </div>
             <div>
-              <label className="block text-[#2d3436] font-bold mb-2">شماره تم:</label>
+              <label className="block text-[#2d3436] font-bold mb-2">شماره دانشجویی:</label>
               <input
                 type="tel"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 className="w-full p-3 rounded-xl border-2 border-[#06beb6] focus:outline-none focus:border-[#48b1f3]"
-                placeholder="شماره تم خود را وارد کنید"
+                placeholder="شماره دانشجویی خود را وارد کنید"
               />
             </div>
           </div>

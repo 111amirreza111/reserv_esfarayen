@@ -19,6 +19,10 @@ export default function AdminDashboard() {
   });
   const [reservations, setReservations] = useState([]);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [reservationToDelete, setReservationToDelete] = useState(null);
+  const [showDeleteVenueModal, setShowDeleteVenueModal] = useState(false);
+  const [venueToDelete, setVenueToDelete] = useState(null);
 
   useEffect(() => {
     // بررسی نقش کاربر
@@ -104,6 +108,44 @@ export default function AdminDashboard() {
     setIsEditing(true);
   };
 
+  const handleDeleteReservation = (reservation) => {
+    setReservationToDelete(reservation);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteReservation = () => {
+    if (reservationToDelete) {
+      const updatedReservations = reservations.filter(r => r.id !== reservationToDelete.id);
+      setReservations(updatedReservations);
+      localStorage.setItem('reservations', JSON.stringify(updatedReservations));
+      setShowDeleteModal(false);
+      setReservationToDelete(null);
+      setSelectedTimeSlot(null);
+    }
+  };
+
+  const handleDeleteVenue = (venue) => {
+    // بررسی وجود رزرو برای این سالن
+    const hasReservations = reservations.some(r => r.venueId === venue.id);
+    if (hasReservations) {
+      setError('این سالن دارای رزرو است و قابل حذف نیست');
+      return;
+    }
+    setVenueToDelete(venue);
+    setShowDeleteVenueModal(true);
+  };
+
+  const confirmDeleteVenue = () => {
+    if (venueToDelete) {
+      const updatedVenues = venues.filter(v => v.id !== venueToDelete.id);
+      setVenues(updatedVenues);
+      localStorage.setItem('venues', JSON.stringify(updatedVenues));
+      setShowDeleteVenueModal(false);
+      setVenueToDelete(null);
+      setIsEditing(true);
+    }
+  };
+
   const handleAddVenue = () => {
     if (!newVenue.name || !newVenue.description) {
       setError('لطفا نام و توضیحات سالن را وارد کنید');
@@ -184,7 +226,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* فرم افزودن سالن جدید */}
-        <div className="venue-card mb-8">
+        <div className="venue-card mb-8 bg-white/80 backdrop-blur-sm">
           <h3 className="text-xl font-bold mb-4">افزودن سالن جدید</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -193,7 +235,7 @@ export default function AdminDashboard() {
                 type="text"
                 value={newVenue.name}
                 onChange={(e) => setNewVenue({...newVenue, name: e.target.value})}
-                className="w-full p-3 rounded-xl border-2 border-[#06beb6] focus:outline-none focus:border-[#48b1f3]"
+                className="w-full p-3 rounded-xl border-2 border-[#06beb6] focus:outline-none focus:border-[#48b1f3] bg-white"
                 placeholder="نام سالن را وارد کنید"
               />
             </div>
@@ -203,7 +245,7 @@ export default function AdminDashboard() {
                 type="text"
                 value={newVenue.description}
                 onChange={(e) => setNewVenue({...newVenue, description: e.target.value})}
-                className="w-full p-3 rounded-xl border-2 border-[#06beb6] focus:outline-none focus:border-[#48b1f3]"
+                className="w-full p-3 rounded-xl border-2 border-[#06beb6] focus:outline-none focus:border-[#48b1f3] bg-white"
                 placeholder="توضیحات سالن را وارد کنید"
               />
             </div>
@@ -219,7 +261,15 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {venues.map((venue) => (
             <div key={venue.id} className="venue-card">
-              <h3 className="text-xl font-bold mb-4">{venue.name}</h3>
+              <div className="flex justify-between items-start mb-4">
+                <h3 className="text-xl font-bold">{venue.name}</h3>
+                <button
+                  onClick={() => handleDeleteVenue(venue)}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  حذف سالن
+                </button>
+              </div>
               <p className="mb-4">{venue.description}</p>
               
               <div className="mb-4">
@@ -254,6 +304,12 @@ export default function AdminDashboard() {
                             <p>نام: {reservation.name}</p>
                             <p>شماره دانشجویی: {reservation.phoneNumber}</p>
                             <p>تاریخ رزرو: {formatDate(reservation.date)}</p>
+                            <button
+                              onClick={() => handleDeleteReservation(reservation)}
+                              className="mt-2 text-red-500 hover:text-red-700 text-sm"
+                            >
+                              حذف رزرو
+                            </button>
                           </div>
                         )}
                       </div>
@@ -268,7 +324,7 @@ export default function AdminDashboard() {
                   value={timeSlotInputs[venue.id] || ''}
                   onChange={(e) => setTimeSlotInputs({ ...timeSlotInputs, [venue.id]: e.target.value })}
                   placeholder="ساعت جدید (مثال: 08:00-10:00)"
-                  className="w-full p-3 rounded-xl border-2 border-[#06beb6] focus:outline-none focus:border-[#48b1f3]"
+                  className="w-full p-3 rounded-xl border-2 border-[#06beb6] focus:outline-none focus:border-[#48b1f3] bg-white"
                 />
                 <button
                   onClick={() => handleAddTimeSlot(venue.id)}
@@ -282,6 +338,54 @@ export default function AdminDashboard() {
           ))}
         </div>
       </div>
+
+      {/* مودال تأیید حذف رزرو */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+            <h3 className="text-xl font-bold mb-4">تأیید حذف رزرو</h3>
+            <p className="mb-6">آیا از حذف این رزرو اطمینان دارید؟</p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300"
+              >
+                انصراف
+              </button>
+              <button
+                onClick={confirmDeleteReservation}
+                className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600"
+              >
+                حذف
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* مودال تأیید حذف سالن */}
+      {showDeleteVenueModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+            <h3 className="text-xl font-bold mb-4">تأیید حذف سالن</h3>
+            <p className="mb-6">آیا از حذف این سالن اطمینان دارید؟</p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setShowDeleteVenueModal(false)}
+                className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300"
+              >
+                انصراف
+              </button>
+              <button
+                onClick={confirmDeleteVenue}
+                className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600"
+              >
+                حذف
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 } 

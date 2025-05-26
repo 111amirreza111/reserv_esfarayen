@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
             <h1 className="text-2xl font-bold text-[#008B8B]">رزرو سالن </h1>
             <div className="space-x-4">
               <Link href="/" className="nav-link">رزرو</Link>
-              <Link href="/my-reservations" className="nav-link">رزروهای من</Link>
+              <Link href="/my-reservations" className="nav-link">رزرو شده ها</Link>
             </div>
           </div>
         </nav>

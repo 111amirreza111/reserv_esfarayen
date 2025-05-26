@@ -106,7 +106,7 @@ label {
   @apply text-[#1a1a2e] font-bold;
 }
 
-/* استایل‌های مخصوص صفحه رزروهای من */
+/* استایل‌های مخصوص صفحه رزرو شده ها */
 .reservation-card {
   @apply bg-white/90 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300 border border-[#e0f7fa];
 }

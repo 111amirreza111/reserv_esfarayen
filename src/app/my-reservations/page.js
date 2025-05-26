@@ -34,9 +34,9 @@ export default function MyReservations() {
     return (
       <div className="min-h-screen p-8">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold text-center mb-8 text-[#1a1a2e]">رزروهای من</h1>
+          <h1 className="text-3xl font-bold text-center mb-8 text-[#1a1a2e]">رزروها</h1>
           <div className="text-center text-[#2d3436]">
-            <p className="text-xl">شما هنوز هیچ رزروی ندارید.</p>
+            <p className="text-xl">هیج رزروی وجود ندارد.</p>
           </div>
         </div>
       </div>
@@ -46,7 +46,7 @@ export default function MyReservations() {
   return (
     <div className="min-h-screen p-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-8 text-[#1a1a2e]">رزروهای من</h1>
+        <h1 className="text-3xl font-bold text-center mb-8 text-[#1a1a2e]">رزرو شده ها</h1>
         <div className="space-y-6">
           {reservations.map((reservation) => (
             <div key={reservation.id} className="reservation-card">
@@ -58,9 +58,7 @@ export default function MyReservations() {
                 <p className="text-[#2d3436]">
                   <span className="font-bold">نام:</span> {reservation.name}
                 </p>
-                <p className="text-[#2d3436]">
-                  <span className="font-bold">شماره تم:</span> {reservation.phoneNumber}
-                </p>
+               
                 <p className="reservation-date">
                   <span className="font-bold">تاریخ رزرو:</span> {formatDate(reservation.date)}
                 </p>
